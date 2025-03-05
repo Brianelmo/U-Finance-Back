@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+} 
+
+model Usuario {
+  id              Int               @id @default(autoincrement())
+  nombre          String
+  email           String            @unique
+  password        String
+
+  ingresos        IngresosUsuario[]
+  gastos          GastosUsuario[]
+  ahorro          Ahorro?
+}
+
+model IngresosUsuario {
+  id              Int      @id @default(autoincrement()) // ID_ENTRADA
+  usuarioId       Int      // ID_USUARIO
+  entradaNum      Float    // ENTRADA_NUM
+  fechaEntrada    DateTime @default(now()) // FECHA_ENTRADA
+  motivoEntrada   String   // MOTIVO_ENTRADA
+
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
+model GastosUsuario {
+  id              Int      @id @default(autoincrement()) // ID_GASTOS
+  usuarioId       Int      // ID_USUARIO
+  gastoNum        Float    // GASTO_NUM
+  fechaGasto      DateTime @default(now()) // FECHA_GASTO
+  motivoGasto     String   // MOTIVO_GASTO
+
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
+model Ahorro {
+  id              Int      @id @default(autoincrement())
+  usuarioId       Int      @unique // Relación uno a uno con Usuario
+  objetivoAhorro  Float    // Monto que el usuario quiere ahorrar
+
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id])
+}
