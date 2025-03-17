@@ -14,16 +14,23 @@ app.use('/api/register', UsuarioRoutes);
   
 app.use('/api/expenses', ExpenseRoutes);
 app.use('/api/getexpenses', ExpenseRoutes);
+app.use('/api/deleteexpense', ExpenseRoutes);
+app.use('/api/editexpense', ExpenseRoutes)
+
 
 app.use('/api/incomes', IncomeRoutes)
+app.use('/api/getincome', IncomeRoutes)
+app.use('/api/deleteincome', IncomeRoutes)
+
 
 app._router.stack.forEach((r: any) => {
   if (r.route && r.route.path) {
     console.log(r.route.path);
-  }
-});
+  };
+})
 
 
-app.listen(3000, () => {
-  console.log("escuchando desde el puerto 3000");
+app.listen(5432, () => {
+  console.log("escuchando desde el puerto 5432");
+  
 });

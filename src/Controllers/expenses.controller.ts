@@ -34,4 +34,45 @@ export class ExpenseController {
       next(error);
     }
   }
+
+  static async deleteExpense(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const expense = await Expense.getExpenseForId(Number(id));
+      if (!expense) {
+        return res.status(400).json({ message: "Gasto no encontrado" });
+      }
+      const expenseDelete = await Expense.deleteExpense(Number(id));
+      res.json({ message: "Gasto eliminado con exito", expenseDelete });
+      console.log(expenseDelete);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+
+  static async editExpense(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { gastoNum, motivoGasto } = req.body;
+      const expense = await Expense.getExpenseForId(Number(id));
+
+      if (!expense) {
+        return res.status(400).json({ message: "Gasto no encontrado" });
+      }
+
+      const updateExpense = await Expense.editExpense(
+        Number(id),
+        gastoNum,
+        motivoGasto
+      );
+      res
+        .status(201)
+        .json({ message: "El gasto fue editado con exito", updateExpense });
+      console.log("el dato fue editado con exito", updateExpense);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
 }
